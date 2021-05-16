@@ -54,6 +54,18 @@ public enum DictionaryPartOfSpeechEnum {
 		return UNDEFINED;
 	}
 	
+	public static DictionaryPartOfSpeechEnum from(long Id) {
+		List<DictionaryPartOfSpeechEnum> listTo = DictionaryPartOfSpeechEnum.asList();
+		//
+			for (DictionaryPartOfSpeechEnum partTo : listTo) {
+				if (partTo.getValue() == Id) {
+					return partTo;
+				}
+			}
+		//
+		return UNDEFINED;
+	}
+	
 	public static List<DictionaryPartOfSpeechEnum> asList() {
 		return Arrays.asList(NOUN,ADJECTIVE,ADVERB,VERB,PREPOSITION,POSTPOSITION,
 				CIRCUMPOSITION,PRONOUN,NUMBER,DISCOURSE_MARKER,PARTICLE,
