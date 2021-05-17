@@ -1,5 +1,7 @@
 package br.com.collei.lavi.api.resource;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -14,6 +16,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
+import br.com.collei.lavi.api.exception.EnumLaviExceptionMessage;
+import br.com.collei.lavi.api.exception.LaviException;
 import br.com.collei.lavi.api.service.DictionaryService;
 import br.com.collei.lavi.api.swagger.ResponseDictionaryEntryInfoData;
 import br.com.collei.lavi.api.swagger.ResponseDictionaryPartsOfSpeechData;
@@ -41,10 +45,13 @@ public class DictionaryResource {
 		@APIResponse(responseCode = "500", description = "Ocorreu um erro no gateway da API ou no microsserviço", content = @Content(schema = @Schema(implementation = ResponseError.class))),
 		@APIResponse(responseCode = "200", description = "Tabela de conjugação do verbo especificado", content = @Content(schema = @Schema(implementation = ResponseDictionaryEntryInfoData.class)))
     })
-	public Response pesquisar(@PathParam("entry") String entry) {
+	public Response pesquisar(@PathParam("entry") String entry) throws LaviException {
 		System.out.println("\r\n--- Entrada pesquisada: '" + entry + "'\r\n");
-		ResponseDictionaryEntryInfoData entrada;
+		Optional<ResponseDictionaryEntryInfoData> entrada;
 		entrada = service.findEntryInfo(entry);
+		if (entrada.isEmpty()) {
+			throw new LaviException(EnumLaviExceptionMessage.NOT_FOUND);
+		}
 		return Response.ok(entrada, MediaType.APPLICATION_JSON).header("x-v", ResourceConstants.VERSION).build();
 	}	
 

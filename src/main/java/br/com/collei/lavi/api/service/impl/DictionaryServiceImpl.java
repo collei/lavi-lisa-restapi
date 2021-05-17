@@ -1,12 +1,18 @@
 package br.com.collei.lavi.api.service.impl;
 
+import static br.com.collei.lavi.api.resource.ResourceData.okResponse;
+import static org.apache.commons.lang3.function.Failable.asSupplier;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import br.com.collei.lavi.api.exception.EnumLaviExceptionMessage;
+import br.com.collei.lavi.api.exception.LaviException;
 import br.com.collei.lavi.api.model.DictionaryPartOfSpeechEnum;
 import br.com.collei.lavi.api.model.EntryModel;
 import br.com.collei.lavi.api.model.PartsOfSpeechModel;
@@ -27,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DictionaryServiceImpl implements DictionaryService {
 
 	@Override
-	public ResponseDictionaryEntryInfoData findEntryInfo(String entry) {
+	public Optional<ResponseDictionaryEntryInfoData> findEntryInfo(String entry) {
 		List<EntryModel> entries = EntryModel
 				.find(" entry = ?1 ", Sort.by("part_of_speech").and("length(meaning)").and("meaning"), entry)
 				.list();
@@ -35,10 +41,10 @@ public class DictionaryServiceImpl implements DictionaryService {
 				.entry(entry)
 				.entryDetails(transformEntryInfo(entries))
 				.build();
-		return ResponseDictionaryEntryInfoData.builder()
+		return Optional.of(ResponseDictionaryEntryInfoData.builder()
 				.meta(ResourceData.createMeta())
 				.data(entryInfo)
-				.build();
+				.build()).filter(e -> e.getData().getEntryDetails().size() > 0);
 	}
 
 	@Override

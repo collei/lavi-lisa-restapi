@@ -1,9 +1,11 @@
 package br.com.collei.lavi.api.resource;
 
 import java.util.Date;
+import java.util.Optional;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -23,4 +25,11 @@ public class ResourceData {
         	.header("x-v", ResourceConstants.VERSION)
         	.build();
     }
+    
+    public static Response okResponse(Object entity, Optional<String> interactionId) {
+    	ResponseBuilder responseBuilder = Response.ok(entity, MediaType.APPLICATION_JSON).header("machine-type", "Character");
+    	interactionId.ifPresent(w -> responseBuilder.header("x-interaction-id", w));
+    	return responseBuilder.build();
+    }
+    
 }
