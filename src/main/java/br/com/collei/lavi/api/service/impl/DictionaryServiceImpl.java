@@ -1,8 +1,5 @@
 package br.com.collei.lavi.api.service.impl;
 
-import static br.com.collei.lavi.api.resource.ResourceData.okResponse;
-import static org.apache.commons.lang3.function.Failable.asSupplier;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,17 +8,17 @@ import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import br.com.collei.lavi.api.exception.EnumLaviExceptionMessage;
-import br.com.collei.lavi.api.exception.LaviException;
 import br.com.collei.lavi.api.model.DictionaryPartOfSpeechEnum;
 import br.com.collei.lavi.api.model.EntryModel;
 import br.com.collei.lavi.api.model.PartsOfSpeechModel;
 import br.com.collei.lavi.api.resource.ResourceData;
 import br.com.collei.lavi.api.service.DictionaryService;
 import br.com.collei.lavi.api.swagger.ResponseDictionaryEntryInfoData;
+import br.com.collei.lavi.api.swagger.ResponseDictionaryMeaningInfoData;
 import br.com.collei.lavi.api.swagger.ResponseDictionaryPartsOfSpeechData;
 import br.com.collei.lavi.api.swagger.dictionary.DictionaryEntryDetailedInfo;
 import br.com.collei.lavi.api.swagger.dictionary.DictionaryEntryInfo;
+import br.com.collei.lavi.api.swagger.dictionary.DictionaryMeaningInfo;
 import br.com.collei.lavi.api.swagger.dictionary.DictionaryPartOfSpeechInfo;
 import br.com.collei.lavi.api.swagger.dictionary.DictionaryPartsOfSpeechListInfo;
 import io.quarkus.panache.common.Sort;
@@ -39,7 +36,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 				.list();
 		DictionaryEntryInfo entryInfo = DictionaryEntryInfo.builder()
 				.entry(entry)
-				.entryDetails(transformEntryInfo(entries))
+				.entryDetails(transformEntryListInfo(entries))
 				.build();
 		return Optional.of(ResponseDictionaryEntryInfoData.builder()
 				.meta(ResourceData.createMeta())
@@ -61,7 +58,37 @@ public class DictionaryServiceImpl implements DictionaryService {
 				.data(data)
 				.build();
 	}
-
+	
+	@Override
+	public Optional<ResponseDictionaryMeaningInfoData> findMeaningInfo(String meaning) {
+		List<EntryModel> meanings = EntryModel
+				.find(" meaning = ?1 ", Sort.by("entry"), meaning)
+				.list();
+		List<DictionaryEntryInfo> entriesList = new ArrayList<>();
+		//
+		for (EntryModel em : meanings) {
+			List<EntryModel> entriesFor = EntryModel
+					.find(" entry = ?1 ", Sort.by("part_of_speech").and("length(meaning)").and("meaning"), em.entry)
+					.list();
+			List<DictionaryEntryDetailedInfo> transformEntryInfo = transformEntryListInfo(entriesFor);
+			entriesList.add(DictionaryEntryInfo.builder()
+					.entry(em.entry)
+					.entryDetails(transformEntryInfo)
+					.build());
+		}
+		//
+		DictionaryMeaningInfo entryListInfo = DictionaryMeaningInfo.builder()
+				.meaning(meaning)
+				.count(entriesList.size())
+				.details(entriesList)
+				.build();
+		return Optional.of(ResponseDictionaryMeaningInfoData.builder()
+				.meta(ResourceData.createMeta())
+				.data(entryListInfo)
+				.build()).filter(e -> e.getData().getDetails().size() > 0);
+	}
+	
+	
 	/**********
 	   ***********
 	     ***********
@@ -70,7 +97,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 	           ***********
 	             ***********/
 	
-	private List<DictionaryEntryDetailedInfo> transformEntryInfo(List<EntryModel> list) {
+	private List<DictionaryEntryDetailedInfo> transformEntryListInfo(List<EntryModel> list) {
 		List<DictionaryEntryDetailedInfo> details = new ArrayList<>();
 		Set<DictionaryPartOfSpeechEnum> partsOfSpeech = new HashSet<>();
 		//
@@ -97,7 +124,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 		return details;
 	}
 	
-	
+
 	private List<DictionaryPartOfSpeechInfo> transformPartsOfSpeechInfo(List<PartsOfSpeechModel> list) {
 		List<DictionaryPartOfSpeechInfo> details = new ArrayList<>();
 		//

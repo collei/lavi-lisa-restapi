@@ -48,9 +48,4 @@ public class ConjugationServiceImpl implements ConjugationService {
 				.build();
 	}
 
-	@Override
-	public List<String> filtersToStringList(String commaSeparatedList) {
-		return Arrays.asList(commaSeparatedList.split(","));
-	}
-
 }

@@ -9,7 +9,5 @@ public interface ConjugationService {
 	ResponseVerbConjugationTableData findConjugationTable(String verbToBeConjugated);
 
 	ResponseVerbConjugationTableData findConjugationTableFiltered(String verbToBeConjugated, List<String> filters);
-	
-	List<String> filtersToStringList(String commaSeparatedList);
 
 }

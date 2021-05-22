@@ -1,5 +1,7 @@
 package br.com.collei.lavi.api.resource;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -12,6 +14,7 @@ import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
@@ -41,12 +44,12 @@ public class ConjugationResource {
 		@APIResponse(responseCode = "500", description = "Ocorreu um erro no gateway da API ou no microsserviço", content = @Content(schema = @Schema(implementation = ResponseError.class))),
 		@APIResponse(responseCode = "200", description = "Tabela de conjugação do verbo especificado", content = @Content(schema = @Schema(implementation = ResponseVerbConjugationTableData.class)))
     })
-	public Response conjugar(@PathParam("verb") String verb, @QueryParam("filters") String filters) {
+	public Response conjugar(@PathParam("verb") @Parameter(description="Verbo a ser conjugado.", required=true) String verb, @QueryParam("filters") @Parameter(description="Lista de critérios, separados por vírgula, que deverão ser retornados.") String filters) {
 		System.out.println("\r\n--- Verbo: '" + verb + "'\r\n--- Filtros: " + (filters!=null ? filters : "") + "\r\n");
 		ResponseVerbConjugationTableData verbo;
 		//
 		if (filters != null && !"".equals(filters)) {
-			verbo = service.findConjugationTableFiltered(verb, service.filtersToStringList(filters));
+			verbo = service.findConjugationTableFiltered(verb, List.of(filters.split(",")));
 		} else {
 			verbo = service.findConjugationTable(verb);
 		}
