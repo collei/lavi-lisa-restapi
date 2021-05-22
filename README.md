@@ -1,56 +1,27 @@
-# lavi-lisa-rest-api project
+# lavi-lisa-restapi
 
-RestAPI for online verb conjugation, noun declension and dictionary queries.
+This is a set of RestFUL API endpoints enabling users to query and display verb conjugation and noun declension tables, aside with a dictionary with a small bunch of entries.
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+## /dic/entries/lavi/{entry}
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+Provides basic info about the specified {entry}, which must be in Lavi language. It'll bring Portuguese words and/or expressions as a result.
 
-## Running the application in dev mode
+## /dic/entries/portuguese/{meaning}
 
-You can run your application in dev mode that enables live coding using:
-```shell script
-./mvnw compile quarkus:dev
-```
+Returns all Lavi entries having this meaning among their correspondences.
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+## /dic/parts-of-speech
 
-## Packaging and running the application
+List all the parts of speech supported by this dictionary.
 
-The application can be packaged using:
-```shell script
-./mvnw package
-```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+## /verbs/{verb}
 
-If you want to build an _über-jar_, execute the following command:
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
-```
+Returns a conjugation table.
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+You can even filter which tenses/modes/persons you want to rertrieve.
 
-## Creating a native executable
+## /nouns/{noun}
 
-You can create a native executable using: 
-```shell script
-./mvnw package -Pnative
-```
+Returns a declension table.
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./mvnw package -Pnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/lavi-lisa-rest-api-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.html.
-
-## Provided examples
-
-### RESTEasy JAX-RS example
-
-REST is easy peasy with this Hello World RESTEasy resource.
-
-[Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
+You can even filter them by case, plurality, or even person (for possessive forms of nominative).
