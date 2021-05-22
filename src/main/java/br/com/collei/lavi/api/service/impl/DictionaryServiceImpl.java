@@ -70,10 +70,9 @@ public class DictionaryServiceImpl implements DictionaryService {
 			List<EntryModel> entriesFor = EntryModel
 					.find(" entry = ?1 ", Sort.by("part_of_speech").and("length(meaning)").and("meaning"), em.entry)
 					.list();
-			List<DictionaryEntryDetailedInfo> transformEntryInfo = transformEntryListInfo(entriesFor);
 			entriesList.add(DictionaryEntryInfo.builder()
 					.entry(em.entry)
-					.entryDetails(transformEntryInfo)
+					.entryDetails(transformEntryListInfo(entriesFor))
 					.build());
 		}
 		//
