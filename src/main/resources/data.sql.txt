@@ -1,5 +1,4 @@
-SET NAMES 'utf8';
-
+﻿
 INSERT INTO parts_of_speech(id,part_of_speech,abbreviated_form) VALUES (1,'noun','n.');
 INSERT INTO parts_of_speech(id,part_of_speech,abbreviated_form) VALUES (2,'adjective','adj.');
 INSERT INTO parts_of_speech(id,part_of_speech,abbreviated_form) VALUES (3,'adverb','adv.');
@@ -24,7 +23,6 @@ INSERT INTO parts_of_speech(id,part_of_speech,abbreviated_form) VALUES (21,'copu
 INSERT INTO parts_of_speech(id,part_of_speech,abbreviated_form) VALUES (22,'prefix','pref.');
 INSERT INTO parts_of_speech(id,part_of_speech,abbreviated_form) VALUES (23,'suffix','suff.');
 INSERT INTO parts_of_speech(id,part_of_speech,abbreviated_form) VALUES (24,'phrase','phrase');
-
 
 INSERT INTO entries (entry,part_of_speech,meaning) VALUES ('patuach',1,'abertura');
 INSERT INTO entries (entry,part_of_speech,meaning) VALUES ('patui',2,'aberto');

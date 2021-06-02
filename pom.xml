@@ -71,15 +71,25 @@
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-hibernate-orm-panache</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.9</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/br.com.collei.lavi/lavi-morph -->
+		<dependency>
+			<groupId>br.com.collei.lavi</groupId>
+			<artifactId>lavi-morph</artifactId>
+			<version>0.2.1</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>br.net.heaven.lavi</groupId>
-			<artifactId>lavi-morph</artifactId>
-			<version>0.2.0-FINAL</version>
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
@@ -151,7 +161,6 @@
 						<artifactId>maven-compiler-plugin</artifactId>
 						<version>${compiler-plugin.version}</version>
 					</plugin>
-
 					<plugin>
 						<artifactId>maven-failsafe-plugin</artifactId>
 						<version>${surefire-plugin.version}</version>
